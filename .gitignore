@@ -1,0 +1,50 @@
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+.pnpm-debug.log*
+.env
+
+# Logs
+logs/
+*.log
+*.log.*
+
+# Compilación y Build
+dist/
+build/
+.cache/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# IDEs y editores
+.vscode/
+.idea/
+*.sublime-workspace
+
+# Git
+*.swp
+*.swo
+*.bak
+*.tmp
+*~
+*.orig
+
+# Tests
+coverage/
+
+# Frontend
+/client/node_modules/
+/client/build/
+/client/.env.local
+/client/.env.development
+/client/.env.production
+
+# Backend
+/server/node_modules/
+/server/.env
+/server/dist/
+/server/logs/
