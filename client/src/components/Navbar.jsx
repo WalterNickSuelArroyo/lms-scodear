@@ -74,7 +74,7 @@ const Navbar = () => {
 export default Navbar;
 
 const MobileNavbar = () => {
-    const role = "instructor";
+  const role = "instructor";
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -100,7 +100,7 @@ const MobileNavbar = () => {
         {role === "instructor" && (
           <SheetFooter>
             <SheetClose>
-                <Button>Dashboard</Button>
+              <Button>Dashboard</Button>
             </SheetClose>
           </SheetFooter>
         )}
