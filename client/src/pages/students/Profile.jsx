@@ -13,14 +13,58 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import Course from "./Course";
-import { useLoadUserQuery } from "@/features/api/authApi";
+import {
+  useLoadUserQuery,
+  useUpdateUserMutation,
+} from "@/features/api/authApi";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const Profile = () => {
-  const { data, isLoading } = useLoadUserQuery();
+  const [name, setName] = useState("");
+  const [profilePhoto, setProfilePhoto] = useState("");
+  const { data, isLoading, refetch } = useLoadUserQuery();
+
+  const [
+    updateUser,
+    {
+      data: updateUserData,
+      isLoading: updateUserIsLoading,
+      isError,
+      error,
+      isSuccess,
+    },
+  ] = useUpdateUserMutation();
+
+  const onChangeHandler = (e) => {
+    const file = e.target.files?.[0];
+    if (file) setProfilePhoto(file);
+  };
+
+  const updateUserHandler = async () => {
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("profilePhoto", profilePhoto);
+    await updateUser(formData);
+  };
+
+  useEffect(() => {
+    refetch();
+  }, []);
+
+  useEffect(() => {
+    if (isSuccess) {
+      refetch();
+      toast.success(data.message || "Perfil actualizado");
+    }
+    if (isError) {
+      toast.error(error.message || "Error al actualizar el perfil");
+    }
+  }, [error, updateUserData, isSuccess, isError]);
 
   if (isLoading) return <h1>Profile Loading...</h1>;
 
-  const { user } = data;
+  const user = data && data.user;
 
   return (
     <div className="max-w-4xl mx-auto px-4 my-24">
@@ -29,7 +73,7 @@ const Profile = () => {
         <div className="flex flex-col items-center">
           <Avatar className="h-24 w-24 md:h-32 md:w-32 mb-4">
             <AvatarImage
-              src={user.photoUrl || "https://github.com/shadcn.png"}
+              src={user?.photoUrl || "https://github.com/shadcn.png"}
               alt="@shadcn"
             />
             <AvatarFallback>CN</AvatarFallback>
@@ -79,18 +123,28 @@ const Profile = () => {
                   <Label>Nombre</Label>
                   <Input
                     type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     placeholder="Nombre"
                     className="col-span-3"
                   />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label>Foto de perfil</Label>
-                  <Input type="file" accept="image/*" className="col-span-3" />
+                  <Input
+                    onChange={onChangeHandler}
+                    type="file"
+                    accept="image/*"
+                    className="col-span-3"
+                  />
                 </div>
               </div>
               <DialogFooter>
-                <Button disabled={isLoading}>
-                  {isLoading ? (
+                <Button
+                  disabled={updateUserIsLoading}
+                  onClick={updateUserHandler}
+                >
+                  {updateUserIsLoading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Por
                       favor, espera
@@ -112,7 +166,9 @@ const Profile = () => {
           {user.enrolledCourses.length === 0 ? (
             <h1>Aún no te has inscrito a ningún curso.</h1>
           ) : (
-            user.enrolledCourses.map((course) => <Course course={course} key={course._id} />)
+            user.enrolledCourses.map((course) => (
+              <Course course={course} key={course._id} />
+            ))
           )}
         </div>
       </div>

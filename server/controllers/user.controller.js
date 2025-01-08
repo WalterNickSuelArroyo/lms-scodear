@@ -1,6 +1,7 @@
 import { User } from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generateToken.js";
+import { deleteMediaFromCloudinary, uploadMedia } from "../utils/cloudinary.js";
 
 export const register = async(req, res) => {
     try {
@@ -60,7 +61,7 @@ export const login = async(req, res) => {
                 message: "Incorrect email or password"
             });
         }
-        generateToken(res, user, `Welcome back ${user.name}`);
+        generateToken(res, user, `Bienvenido ${user.name}`);
 
     } catch (error) {
         console.log(error);
@@ -74,7 +75,7 @@ export const login = async(req, res) => {
 export const logout = async (_,res) => {
     try {
         return res.status(200).cookie("token", "", {maxAge:0}).json({
-            message:"Logged out successfully.",
+            message:"Se cerró sesión con éxito",
             success:true
         })
     } catch (error) {
@@ -122,24 +123,24 @@ export const updateProfile = async (req,res) => {
                 success:false
             }) 
         }
-        // // extract public id of the old image from the url is it exists;
-        // if(user.photoUrl){
-        //     const publicId = user.photoUrl.split("/").pop().split(".")[0]; // extract public id
-        //     deleteMediaFromCloudinary(publicId);
-        // }
+        // extract public id of the old image from the url is it exists;
+        if(user.photoUrl){
+            const publicId = user.photoUrl.split("/").pop().split(".")[0]; // extract public id
+            deleteMediaFromCloudinary(publicId);
+        }
 
-        // // upload new photo
-        // const cloudResponse = await uploadMedia(profilePhoto.path);
-        // const photoUrl = cloudResponse.secure_url;
+        // upload new photo
+        const cloudResponse = await uploadMedia(profilePhoto.path);
+        const photoUrl = cloudResponse.secure_url;
 
         const updatedData = {name, photoUrl};
-        // const updatedUser = await User.findByIdAndUpdate(userId, updatedData, {new:true}).select("-password");
+        const updatedUser = await User.findByIdAndUpdate(userId, updatedData, {new:true}).select("-password");
 
-        // return res.status(200).json({
-        //     success:true,
-        //     user:updatedUser,
-        //     message:"Profile updated successfully."
-        // })
+        return res.status(200).json({
+            success:true,
+            user:updatedUser,
+            message:"Profile updated successfully."
+        })
 
     } catch (error) {
         console.log(error);
