@@ -1,45 +1,45 @@
-// import { Button } from "@/components/ui/button";
-// import { Input } from "@/components/ui/input";
-// import { Label } from "@/components/ui/label";
-// import {
-//   Select,
-//   SelectContent,
-//   SelectGroup,
-//   SelectItem,
-//   SelectLabel,
-//   SelectTrigger,
-//   SelectValue,
-// } from "@/components/ui/select";
-// import { useCreateCourseMutation } from "@/features/api/courseApi";
-// import { Loader2 } from "lucide-react";
-// import React, { useEffect, useState } from "react";
-// import { useNavigate } from "react-router-dom";
-// import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useCreateCourseMutation } from "@/features/api/courseApi";
+import { Loader2 } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const AddCourse = () => {
-  //   const [courseTitle, setCourseTitle] = useState("");
-  //   const [category, setCategory] = useState("");
+    const [courseTitle, setCourseTitle] = useState("");
+    const [category, setCategory] = useState("");
 
-  //   const [createCourse, { data, isLoading, error, isSuccess }] =
-  //     useCreateCourseMutation();
+    const [createCourse, { data, isLoading, error, isSuccess }] =
+      useCreateCourseMutation();
 
-  //   const navigate = useNavigate();
+    const navigate = useNavigate();
 
-  //   const getSelectedCategory = (value) => {
-  //     setCategory(value);
-  //   };
+    const getSelectedCategory = (value) => {
+      setCategory(value);
+    };
 
-  //   const createCourseHandler = async () => {
-  //     await createCourse({ courseTitle, category });
-  //   };
+    const createCourseHandler = async () => {
+      await createCourse({ courseTitle, category });
+    };
 
-  //   // for displaying toast
-  //   useEffect(()=>{
-  //     if(isSuccess){
-  //         toast.success(data?.message || "Course created.");
-  //         navigate("/admin/course");
-  //     }
-  //   },[isSuccess, error])
+    // for displaying toast
+    useEffect(()=>{
+      if(isSuccess){
+          toast.success(data?.message || "Curso creado");
+          navigate("/admin/course");
+      }
+    },[isSuccess, error])
 
   return (
     <div className="flex-1 mx-10">
@@ -53,21 +53,21 @@ const AddCourse = () => {
           laborum!
         </p>
       </div>
-      {/* <div className="space-y-4">
+      <div className="space-y-4">
         <div>
-          <Label>Title</Label>
+          <Label>Titulo</Label>
           <Input
             type="text"
             value={courseTitle}
             onChange={(e) => setCourseTitle(e.target.value)}
-            placeholder="Your Course Name"
+            placeholder="Nombre de tu curso"
           />
         </div>
         <div>
-          <Label>Category</Label>
+          <Label>Categoria</Label>
           <Select onValueChange={getSelectedCategory}>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select a category" />
+              <SelectValue placeholder="Selecciona una categoria" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
@@ -94,20 +94,20 @@ const AddCourse = () => {
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" onClick={() => navigate("/admin/course")}>
-            Back
+            Atras
           </Button>
           <Button disabled={isLoading} onClick={createCourseHandler}>
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Please wait
+                Esperar, por favor
               </>
             ) : (
-              "Create"
+              "Crear"
             )}
           </Button>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 };
