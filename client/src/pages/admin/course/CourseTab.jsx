@@ -18,20 +18,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-// import {
-//   useEditCourseMutation,
+import {
+  useEditCourseMutation,
 //   useGetCourseByIdQuery,
 //   usePublishCourseMutation,
-// } from "@/features/api/courseApi";
+} from "@/features/api/courseApi";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-// import { toast } from "sonner";
+import { toast } from "sonner";
 
 const CourseTab = () => {
     const isPublished = true;
-    const isLoading = false;
-
 
     const [input, setInput] = useState({
       courseTitle: "",
@@ -43,8 +41,8 @@ const CourseTab = () => {
       courseThumbnail: "",
     });
 
-  //   const params = useParams();
-  //   const courseId = params.courseId;
+    const params = useParams();
+    const courseId = params.courseId;
   //   const { data: courseByIdData, isLoading: courseByIdLoading , refetch} =
   //     useGetCourseByIdQuery(courseId);
 
@@ -68,8 +66,8 @@ const CourseTab = () => {
     const [previewThumbnail, setPreviewThumbnail] = useState("");
     const navigate = useNavigate();
 
-  //   const [editCourse, { data, isLoading, isSuccess, error }] =
-  //     useEditCourseMutation();
+    const [editCourse, { data, isLoading, isSuccess, error }] =
+      useEditCourseMutation();
 
     const changeEventHandler = (e) => {
       const { name, value } = e.target;
@@ -93,19 +91,17 @@ const CourseTab = () => {
       }
     };
 
-    const updateCourseHandler = async () => {
-        console.log(input);
-        
-    //   const formData = new FormData();
-    //   formData.append("courseTitle", input.courseTitle);
-    //   formData.append("subTitle", input.subTitle);
-    //   formData.append("description", input.description);
-    //   formData.append("category", input.category);
-    //   formData.append("courseLevel", input.courseLevel);
-    //   formData.append("coursePrice", input.coursePrice);
-    //   formData.append("courseThumbnail", input.courseThumbnail);
+    const updateCourseHandler = async () => {     
+      const formData = new FormData();
+      formData.append("courseTitle", input.courseTitle);
+      formData.append("subTitle", input.subTitle);
+      formData.append("description", input.description);
+      formData.append("category", input.category);
+      formData.append("courseLevel", input.courseLevel);
+      formData.append("coursePrice", input.coursePrice);
+      formData.append("courseThumbnail", input.courseThumbnail);
 
-    //   await editCourse({ formData, courseId });
+      await editCourse({ formData, courseId });
     };
 
   //   const publishStatusHandler = async (action) => {
@@ -120,14 +116,14 @@ const CourseTab = () => {
   //     }
   //   }
 
-  //   useEffect(() => {
-  //     if (isSuccess) {
-  //       toast.success(data.message || "Course update.");
-  //     }
-  //     if (error) {
-  //       toast.error(error.data.message || "Failed to update course");
-  //     }
-  //   }, [isSuccess, error]);
+    useEffect(() => {
+      if (isSuccess) {
+        toast.success(data.message || "Curso actualizado");
+      }
+      if (error) {
+        toast.error(error.data.message || "Error al actualizar el curso");
+      }
+    }, [isSuccess, error]);
 
   //   if(courseByIdLoading) return <h1>Loading...</h1>
 
