@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/select";
 import {
   useEditCourseMutation,
-//   useGetCourseByIdQuery,
+  useGetCourseByIdQuery,
 //   usePublishCourseMutation,
 } from "@/features/api/courseApi";
 import { Loader2 } from "lucide-react";
@@ -43,25 +43,25 @@ const CourseTab = () => {
 
     const params = useParams();
     const courseId = params.courseId;
-  //   const { data: courseByIdData, isLoading: courseByIdLoading , refetch} =
-  //     useGetCourseByIdQuery(courseId);
+    const { data: courseByIdData, isLoading: courseByIdLoading , refetch} =
+      useGetCourseByIdQuery(courseId);
 
   //     const [publishCourse, {}] = usePublishCourseMutation();
 
-  //   useEffect(() => {
-  //     if (courseByIdData?.course) {
-  //         const course = courseByIdData?.course;
-  //       setInput({
-  //         courseTitle: course.courseTitle,
-  //         subTitle: course.subTitle,
-  //         description: course.description,
-  //         category: course.category,
-  //         courseLevel: course.courseLevel,
-  //         coursePrice: course.coursePrice,
-  //         courseThumbnail: "",
-  //       });
-  //     }
-  //   }, [courseByIdData]);
+    useEffect(() => {
+      if (courseByIdData?.course) {
+          const course = courseByIdData?.course;
+        setInput({
+          courseTitle: course.courseTitle,
+          subTitle: course.subTitle,
+          description: course.description,
+          category: course.category,
+          courseLevel: course.courseLevel,
+          coursePrice: course.coursePrice,
+          courseThumbnail: "",
+        });
+      }
+    }, [courseByIdData]);
 
     const [previewThumbnail, setPreviewThumbnail] = useState("");
     const navigate = useNavigate();
@@ -125,7 +125,7 @@ const CourseTab = () => {
       }
     }, [isSuccess, error]);
 
-  //   if(courseByIdLoading) return <h1>Loading...</h1>
+    if(courseByIdLoading) return <h1>Loading...</h1>
 
   return (
     <Card>
