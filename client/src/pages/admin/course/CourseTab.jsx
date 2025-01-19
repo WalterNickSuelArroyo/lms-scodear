@@ -21,7 +21,7 @@ import {
 import {
   useEditCourseMutation,
   useGetCourseByIdQuery,
-//   usePublishCourseMutation,
+  //   usePublishCourseMutation,
 } from "@/features/api/courseApi";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -29,80 +29,83 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 const CourseTab = () => {
-    const isPublished = true;
+  const isPublished = true;
 
-    const [input, setInput] = useState({
-      courseTitle: "",
-      subTitle: "",
-      description: "",
-      category: "",
-      courseLevel: "",
-      coursePrice: "",
-      courseThumbnail: "",
-    });
+  const [input, setInput] = useState({
+    courseTitle: "",
+    subTitle: "",
+    description: "",
+    category: "",
+    courseLevel: "",
+    coursePrice: "",
+    courseThumbnail: "",
+  });
 
-    const params = useParams();
-    const courseId = params.courseId;
-    const { data: courseByIdData, isLoading: courseByIdLoading , refetch} =
-      useGetCourseByIdQuery(courseId);
+  const params = useParams();
+  const courseId = params.courseId;
+  const {
+    data: courseByIdData,
+    isLoading: courseByIdLoading,
+    refetch,
+  } = useGetCourseByIdQuery(courseId);
 
   //     const [publishCourse, {}] = usePublishCourseMutation();
 
-    useEffect(() => {
-      if (courseByIdData?.course) {
-          const course = courseByIdData?.course;
-        setInput({
-          courseTitle: course.courseTitle,
-          subTitle: course.subTitle,
-          description: course.description,
-          category: course.category,
-          courseLevel: course.courseLevel,
-          coursePrice: course.coursePrice,
-          courseThumbnail: "",
-        });
-      }
-    }, [courseByIdData]);
+  useEffect(() => {
+    if (courseByIdData?.course) {
+      const course = courseByIdData?.course;
+      setInput({
+        courseTitle: course.courseTitle,
+        subTitle: course.subTitle,
+        description: course.description,
+        category: course.category,
+        courseLevel: course.courseLevel,
+        coursePrice: course.coursePrice,
+        courseThumbnail: "",
+      });
+    }
+  }, [courseByIdData]);
 
-    const [previewThumbnail, setPreviewThumbnail] = useState("");
-    const navigate = useNavigate();
+  const [previewThumbnail, setPreviewThumbnail] = useState("");
+  const navigate = useNavigate();
 
-    const [editCourse, { data, isLoading, isSuccess, error }] =
-      useEditCourseMutation();
+  const [editCourse, { data, isLoading, isSuccess, error }] =
+    useEditCourseMutation();
 
-    const changeEventHandler = (e) => {
-      const { name, value } = e.target;
-      setInput({ ...input, [name]: value });
-    };
+  const changeEventHandler = (e) => {
+    const { name, value } = e.target;
+    setInput({ ...input, [name]: value });
+  };
 
-    const selectCategory = (value) => {
-      setInput({ ...input, category: value });
-    };
-    const selectCourseLevel = (value) => {
-      setInput({ ...input, courseLevel: value });
-    };
-    // get file
-    const selectThumbnail = (e) => {
-      const file = e.target.files?.[0];
-      if (file) {
-        setInput({ ...input, courseThumbnail: file });
-        const fileReader = new FileReader();
-        fileReader.onloadend = () => setPreviewThumbnail(fileReader.result);
-        fileReader.readAsDataURL(file);
-      }
-    };
+  const selectCategory = (value) => {
+    setInput({ ...input, category: value });
+  };
+  const selectCourseLevel = (value) => {
+    setInput({ ...input, courseLevel: value });
+  };
+  // get file
+  const selectThumbnail = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setInput({ ...input, courseThumbnail: file });
+      const fileReader = new FileReader();
+      fileReader.onloadend = () => setPreviewThumbnail(fileReader.result);
+      fileReader.readAsDataURL(file);
+    }
+  };
 
-    const updateCourseHandler = async () => {     
-      const formData = new FormData();
-      formData.append("courseTitle", input.courseTitle);
-      formData.append("subTitle", input.subTitle);
-      formData.append("description", input.description);
-      formData.append("category", input.category);
-      formData.append("courseLevel", input.courseLevel);
-      formData.append("coursePrice", input.coursePrice);
-      formData.append("courseThumbnail", input.courseThumbnail);
+  const updateCourseHandler = async () => {
+    const formData = new FormData();
+    formData.append("courseTitle", input.courseTitle);
+    formData.append("subTitle", input.subTitle);
+    formData.append("description", input.description);
+    formData.append("category", input.category);
+    formData.append("courseLevel", input.courseLevel);
+    formData.append("coursePrice", input.coursePrice);
+    formData.append("courseThumbnail", input.courseThumbnail);
 
-      await editCourse({ formData, courseId });
-    };
+    await editCourse({ formData, courseId });
+  };
 
   //   const publishStatusHandler = async (action) => {
   //     try {
@@ -116,16 +119,16 @@ const CourseTab = () => {
   //     }
   //   }
 
-    useEffect(() => {
-      if (isSuccess) {
-        toast.success(data.message || "Curso actualizado");
-      }
-      if (error) {
-        toast.error(error.data.message || "Error al actualizar el curso");
-      }
-    }, [isSuccess, error]);
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(data.message || "Curso actualizado");
+    }
+    if (error) {
+      toast.error(error.data.message || "Error al actualizar el curso");
+    }
+  }, [isSuccess, error]);
 
-    if(courseByIdLoading) return <h1>Loading...</h1>
+  if (courseByIdLoading) return <h1>Loading...</h1>;
 
   return (
     <Card>
@@ -147,9 +150,7 @@ const CourseTab = () => {
             //   )
             // }
           >
-            {
-                isPublished ? "No publicado" : "Publicado"
-            }
+            {isPublished ? "No publicado" : "Publicado"}
             {/* {courseByIdData?.course.isPublished ? "Unpublished" : "Publish"} */}
           </Button>
           <Button>Eliminar curso</Button>
@@ -226,9 +227,9 @@ const CourseTab = () => {
                 <SelectContent>
                   <SelectGroup>
                     <SelectLabel>Nivel del curso</SelectLabel>
-                    <SelectItem value="Beginner">Principiante</SelectItem>
-                    <SelectItem value="Medium">Intermedio</SelectItem>
-                    <SelectItem value="Advance">Avanzado</SelectItem>
+                    <SelectItem value="Principiante">Principiante</SelectItem>
+                    <SelectItem value="Intermedio">Intermedio</SelectItem>
+                    <SelectItem value="Avanzado">Avanzado</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
